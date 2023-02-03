@@ -7,7 +7,7 @@ Authors: Kristen Howard
 
 Created on: 2023-02-02
 
-**I hope to continue to grow and empower my self with eiffient data organizations and learn about eifficient ways to collaborate and visualize in science.**
+**I hope to continue to grow and empower my self with efficient data organizations and learn about efficient ways to collaborate and visualize in science.**
 
 Attached here you will see my [Files](https://github.com/Biol551-CSUN/Howard) for the Spring 2023 semester. Within each file, there will be weekly folders containing data sheets, R scripts, and R outputs. Throughout the semester, assignments and additonal information will be added.
 
