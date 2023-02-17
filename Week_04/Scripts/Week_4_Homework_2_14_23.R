@@ -48,7 +48,7 @@ penguins %>%
   ggplot(aes(x = island, #Assign the x and y values
              y = log(body_mass_g))) +
   geom_boxplot() + #this will create box plot
-  labs(x= "Island", y="Logged Body Mass (g)") +
+  labs(x= "Island", y="Logged Body Mass (g)", size = 20) +
   ggtitle(wrapper(my_title2, width = 20)) + #using wrapper function for long title
   theme_bw() +
   theme(plot.title = element_text(hjust = 0.5))
@@ -57,4 +57,3 @@ penguins %>%
 wrapper <- function(x, ...) 
 {paste(strwrap(x, ...), collapse = "\n")}
 my_title2 <- "Body Mass of Female Penguins Amoung Islands"
-
