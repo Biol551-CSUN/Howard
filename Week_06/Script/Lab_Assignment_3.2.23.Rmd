@@ -1,0 +1,93 @@
+---
+title: "RMarkdown 3/2/23 Lab Assignment"
+author: "Kristen Howard"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+   toc: TRUE
+   toc_float: TRUE
+   theme: flatly
+---
+
+# Introduction
+
+Today, we will be practiving various techniques and functions we have learned in RMarkdown. In today's lesson, we will be using data from the [*Palmer Penguin Package*](https://allisonhorst.github.io/palmerpenguins/).
+
+# Objectives
+
+Today we will be covering the following objectives:
+
+-   Create an RMarkdown file and save outputs/scripts to the create location.
+-   Create a RMarkdown file with clear explanations and headings
+-   Create a production quality figures, which includes a table **AND** a graph.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	fig.path = "../Output/",
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+# Load Libraries
+
+Now, lets load the appropriate libraries needed for this assignment. This would include the dataset from the palmerpenguin package.
+
+```{r}
+library(here)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(palmerpenguins)
+library(kableExtra)
+library(beyonce)
+library(prettydoc)
+```
+
+# Load in Data
+
+Now, lets observe our data with the following functions. Take a look at the various variables and start thinging about how you can model this data.
+
+```{r}
+#Observe the data
+View(penguins)  
+head(penguins) # This creates a tibble where we can see the names of                    columns.
+```
+
+# Creating a Table
+
+Now, we will learn how to create a table in R. There is a way on how to do this in R. There are also a varity of packages to help you create visuals with your tables. Here is additional information on those packages. However, today we will be creating a package with Kable. Let's create a table looking at the average body mass of birds amoung the islands.
+
+```{r PenguinBodyMass, fig.path="../Output/", include=FALSE}
+penguins %>% #Select data
+  select(body_mass_g, Island = island) %>%
+    group_by(Island) %>% #Group by island
+   summarise("Avgerage Body Mass" = mean(body_mass_g,na.rm = TRUE)) %>% #Calculates the mean 
+    kbl(caption = "Average Body Mass per Island", position="center")%>% # make it a kable table 
+    kable_classic() %>%
+    column_spec(2, bold = T) %>% #This is how you chose the colors of rows
+    row_spec(1, bold = T, color = "white", background = "hotpink") %>%
+    kable_styling(full_width = FALSE) 
+```
+
+# Creating a Plot
+
+Now, let's try to create a plot looking at the body mass, flipper length among species and sex.
+
+```{r penguingraph}
+penguins %>% #Select the data set
+  ggplot(mapping = aes(x = body_mass_g, # Select your x and y variables
+                       y = flipper_length_mm,
+                       color = species, # Each point will be colored by species
+                       shape = sex))  + # Each point will be shaped by sex
+  geom_point()+ #This creates the points
+  labs(x = "Body Mass (g)", #Label lets you name the x & y axis and legends. 
+       y = "Flipper Length (mm)",
+       color = "Species",
+       shape = "Sex") +
+ ggtitle(label = "Flipper Length and Body Mass Differences among Islands and Sex") +
+ theme_bw() + #This is the theme that we have chose.
+ scale_color_manual(values = beyonce_palette(11))
+
+```

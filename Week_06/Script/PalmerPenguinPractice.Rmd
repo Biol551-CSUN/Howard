@@ -1,0 +1,56 @@
+---
+title: "Practice with Palmer Penguin Data"
+author: "Kristen Howard"
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    toc: TRUE
+    toc_float: TRUE
+    theme: darkly
+    
+---
+**Above is how you create an table of contents**
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+# Introduction
+
+Today we are going to work with the Palmer Penguin data to learn *RMarkdown*
+
+# Load Libraries
+```{r message=FALSE, warning=FALSE}
+library(here)
+library(tidyverse)
+library(palmerpenguins)
+```
+#### warning = FALSE omits the warnings associated with the code chunk
+
+# Inspect the data
+```{r}
+glimpse(penguins) # Look at penguin data
+View(penguins) # View penguion data
+```
+# Make a plot
+Plot the penguin data with bill length by bill depth
+![Penguin](https://upload.wikimedia.org/wikipedia/commons/4/4a/Adelie_chicks_in_antarctica_and_Ms_Explorer.jpg))
+
+```{r}
+penguins %>% #using penguin data set
+  ggplot(aes(x = bill_length_mm, 
+             y = bill_depth_mm,
+             color = species)) +
+  geom_point() +
+  geom_smooth(method = "lm") + #add a linear regression
+  labs(x = "Bill length (mm)",
+       y = "Bill Depth (mm)",
+       color = "Species") +
+  theme_classic()
+  
+```
+
