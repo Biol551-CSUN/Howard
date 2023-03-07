@@ -1,0 +1,90 @@
+---
+title: "Cat_Spatial_Data_Analysis"
+author: "Kristen Howard"
+date: "`r Sys.Date()`"
+output: 
+  prettydoc::html_pretty:
+    theme: caymen
+    
+---
+
+# Introduction
+
+Today, we will be using previous TidyTuesday data to practice using mapping functions associated with RStudio.Our objectives are:
+
+1. Learn several mapping functions
+2. Use TidyTuesday datset to create a **BEAUTIFUL** graph
+
+
+# Load Packages
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	fig.path = "../Output/",
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+```{r}
+library(here)
+library(tidyverse)
+library(tidytuesdayR)
+library(ggplot2)
+library(maps)
+library(mapdata)
+library(mapproj)
+library(prettydoc)
+```
+
+# Load Data
+
+```{r}
+cats_uk <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-01-31/cats_uk.csv')
+head(cats_uk)
+
+```
+-
+# Create Map of United Kingdom
+```{r Map_of_UK}
+
+ UK <-map_data(map = "world", region = "UK")  #Let's create a map of the UK
+
+UK %>%
+  ggplot( aes(x = long,  # Select your df and specify the x and y values
+                      y = lat, 
+                      group = group)) + # This is very important when working with spatial data
+  
+ geom_polygon() +
+ coord_map()
+```
+
+# Select Specefic Cat IDs 
+We will chose Athena, Moscow, and Lola
+```{r}
+Tag_cat <- cats_uk%>%
+              filter(tag_id %in% c("Athena","Moscow-Tag","Millie-Tag","Bobs-Tag"))
+```
+
+# Now, let's add data points from UK data.
+```{r UK_Cat_Plot}
+ggplot() +
+  geom_polygon(data=UK, #select the UK map we created earlier.
+               aes(x=long,
+                   y=lat,
+                   group=group,
+                   fill=region),
+               color="#003300", 
+               fill="#008000") +
+  theme_minimal() + #This gets rid of grid and x and y axis.
+  geom_point(data=Tag_cat, #This is how you add the points from another dataset and add it to a map
+             aes(x = location_long, 
+                 y = location_lat,
+                 color= tag_id,
+                 legend= tag_id)) +
+  labs(title = "Map of Cat Locations in the United Kingdom",color = "Cat ID") +
+  coord_map()+
+  guides(fill=FALSE)
+```
+
