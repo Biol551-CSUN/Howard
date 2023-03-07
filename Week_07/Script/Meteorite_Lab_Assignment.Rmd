@@ -68,7 +68,7 @@ Tag_cat <- cats_uk%>%
 ```
 
 # Now, let's add data points from UK data.
-```{r UK_Cat_Plot}
+```{r UK_Cat_Plot2}
 ggplot() +
   geom_polygon(data=UK, #select the UK map we created earlier.
                aes(x=long,
