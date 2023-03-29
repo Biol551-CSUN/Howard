@@ -1,0 +1,121 @@
+---
+title: "Intro to Maps pt 2"
+author: "Kristen Howard"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Load in Packages
+
+```{r}
+library(ggmap)
+library(ggsn)
+library(tidyverse)
+library(here)
+library(emojifont)
+```
+
+#### Here is how you register your API code. If the write function doesn't work. You will have to load this every single time. *NEVER* Push this info out into GitHub. This is confidential information tied to your credit card... no bueno.
+
+```{r}
+register_google(key = "YOUR KEY HERE", write = TRUE)
+```
+
+#### Load in Data
+
+```{r}
+ChemData <- read_csv(here("Week_07","Data","chemical_manualua.csv"))
+```
+
+```{r}
+Oahu <- get_map("Oahu") #This is 
+```
+
+####You can now tuse ggmap to plot the base layer.
+
+```{r}
+ggmap(Oahu)
+```
+
+#You can specify certain coordinates if you are interested in that.
+
+```{r}
+WP <- data.frame(lon= -157.7621, lat= 21.27427)
+Map1 <- get_map(WP)
+ggmap(Map1) #To see the map, you have to use the ggmap function. If you don't you will see numbers. 
+```
+
+You can zoom in on a location, the larger the number, the more zoomed in it will be the range is 3 to 20
+
+```{r}
+Map1 <- get_map(WP,zoom = 17)
+ggmap(Map1 )
+```
+
+You can also change the map type. The maptype can also be "watercolor". Go ahead and try it!
+
+```{r}
+Map1 <- get_map(WP,zoom = 17, maptype = "satellite")
+```
+
+#The ggmap base can be used as a base layer. Let's add points.
+
+```{r}
+ggmap(Map1)+
+  geom_point(data = ChemData,
+             aes(x = Long,
+                 y = Lat,
+                 color = Salinity),
+                 size = 4) +
+  scale_color_viridis_c()
+```
+
+```{r}
+ggmap(Map1)+ #Rember to use ggmap
+  geom_point(data = ChemData, 
+             aes(x = Long, y = Lat, color = Salinity), 
+             size = 4) + 
+  scale_color_viridis_c()+
+  scalebar( x.min = -157.766, x.max = -157.758,
+           y.min = 21.2715, y.max = 21.2785,
+            dist = 250, dist_unit = "m", model = "WGS84", #The model is specefic to your long/lat data. 
+            transform = TRUE, st.color = "white",
+            box.fill = c("yellow", "white"))
+```
+
+# How do you get the Lat and Long Data if you don't have it?
+
+You can use geocode() function
+
+```{r}
+geocode("the white house")
+```
+
+you
+
+```{r}
+geocode("California State University, Northridge")
+```
+
+```{r}
+geocode("Insert your own")
+```
+
+s
+
+```{r}
+library(emojifont)
+search_emoji('smile')
+```
+
+```{r}
+ggplot() + 
+  geom_emoji('smile_cat',
+             x = 1:5,
+             y = 1:5,
+             size = 10)
+```
