@@ -1,0 +1,90 @@
+---
+title: "Howard - Good/Bad Plot"
+author: "Kristen Howard"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Today we will be using previous TidyTuesday data containing data regarding Cocktails. First, load up the packages.
+
+```{r}
+library(here)
+library(tidyverse)
+library(lubridate)
+library(dplyr)
+library(imager)
+library(jpeg)
+```
+
+#### Next, load the data.
+
+```{r}
+cocktails <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-26/cocktails.csv')
+glimpse(cocktails)
+view(cocktails)
+
+```
+
+Now, Let's create our Bad graph! We want to add in an image in our background, so let's load in that image.
+
+```{r}
+img <- image_read("https://images.unsplash.com/photo-1597290282695-edc43d0e7129?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=875&q=80")
+
+img %>% 
+  image_scale("200")
+
+img %>% 
+  image_blur(5, 5) %>%
+  image_colorize(opacity = 20, color = "white")
+
+```
+
+```{r, echo = TRUE}
+
+cocktails_clean <- cocktails %>%
+  select(drink, ingredient_number,category,drink_thumb) %>%
+  filter(category == 'Beer',
+         ingredient_number < 4)
+
+view(cocktails_clean)
+
+
+cocktails_clean %>%
+  ggplot( aes(x = ingredient_number,
+              y = drink)) +
+  annotation_custom(grid::rasterGrob(img
+                                     , width = unit(1, "npc")
+                                     , height = unit(1, "npc"))) +
+  geom_violin_pattern( fill = '#f28e13', color = 'white',
+                       pattern = 'circle', pattern_density = 0.3) + 
+  coord_flip() +
+  labs(title = 'Beer Drinks and Number of Ingredients') +
+  theme(titl = element_text(angle = -45, hjust = 0)) +
+  theme(axis.text.x = element_text(colour = "#FF10F0")) +  
+  theme(panel.background = element_rect(fill = 'img'))+
+  theme_void()
+
+```
+
+This chart is **bad** because: 1. 2. 3 4. 5.
+
+Now, let's look at the good chart
+
+```{r}
+
+cocktails %>%
+  ggplot( aes(x = category,
+              y = ingredient_number)) +
+  geom_violin() +
+  ggtitle(label = "Drink Category and Ingredients") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs( x = "Cocktail Category",
+        y = "Number of Ingredients") +
+    theme_bw() 
+```
+
+This chart is **good** because: 1. 2. 3 4. 5.
