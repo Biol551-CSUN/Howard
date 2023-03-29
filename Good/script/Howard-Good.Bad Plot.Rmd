@@ -2,13 +2,23 @@
 title: "Howard - Good/Bad Plot"
 author: "Kristen Howard"
 date: "`r Sys.Date()`"
-output: html_document
+output:
+  html_document:
+   toc: TRUE
+   toc_float: TRUE
+   theme: flatly
 ---
 
-```{r setup}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	fig.path = "../Output/",
+	message = FALSE,
+	warning = FALSE
+)
 ```
 
+# Load Packages
 #### Today we will be using previous TidyTuesday data containing data regarding Cocktails. First, load up the packages.
 
 ```{r}
@@ -18,9 +28,11 @@ library(lubridate)
 library(dplyr)
 library(imager)
 library(jpeg)
+library(magick)
+library(ggpattern)
 ```
 
-#### Next, load the data.
+### load the data.
 
 ```{r}
 cocktails <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-26/cocktails.csv')
@@ -29,6 +41,7 @@ view(cocktails)
 
 ```
 
+### Add in Image
 Now, Let's create our Bad graph! We want to add in an image in our background, so let's load in that image.
 
 ```{r}
@@ -43,6 +56,7 @@ img %>%
 
 ```
 
+### Subset the data and create graph
 ```{r, echo = TRUE}
 
 cocktails_clean <- cocktails %>%
@@ -70,8 +84,9 @@ cocktails_clean %>%
 
 ```
 
-This chart is **bad** because: 1. 2. 3 4. 5.
+This chart is **bad** because: -1. -2. -3 -4. -5.
 
+# Good Chart
 Now, let's look at the good chart
 
 ```{r}
@@ -87,4 +102,5 @@ cocktails %>%
     theme_bw() 
 ```
 
-This chart is **good** because: 1. 2. 3 4. 5.
+This chart is **good** because: 
+-1. -2. -3 -4. -5.
