@@ -1,0 +1,119 @@
+---
+title: "Howard - Good/Bad Plot"
+author: "Kristen Howard"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+   toc: TRUE
+   toc_float: TRUE
+   theme: flatly
+---
+
+# Introduction
+
+Today we will be using previous TidyTuesday data containing data regarding Cocktails. First, load up the packages. This data contains information on popular cocktails, different categories, and much more!
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	fig.path = "../Output/",
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+# Load Packages
+
+```{r}
+library(here)
+library(tidyverse)
+library(lubridate)
+library(dplyr)
+library(imager)
+library(jpeg)
+library(magick)
+library(ggpattern)
+library(RColorBrewer)
+```
+
+### load the data
+
+```{r}
+cocktails <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-26/cocktails.csv')
+glimpse(cocktails)
+view(cocktails)
+
+```
+
+### Add an Image
+
+Now, Let's create our Bad graph! We want to add in an image in our background, so let's load in that image.
+
+```{r Bar Image}
+img <- image_read("https://images.unsplash.com/photo-1597290282695-edc43d0e7129?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=875&q=80")
+
+img %>% 
+  image_scale("200")
+
+img %>% 
+  image_blur(5, 5) %>%
+  image_colorize(opacity = 20, color = "white")
+
+```
+
+### Subset the data and create graph
+
+```{r, Bad Plot, echo = TRUE}
+
+cocktails_clean <- cocktails %>%
+  select(drink, ingredient_number,category,drink_thumb) %>%
+  filter(category == 'Beer',
+         ingredient_number < 4)
+
+view(cocktails_clean)
+
+
+cocktails_clean %>%
+  ggplot( aes(x = ingredient_number,
+              y = drink)) +
+  annotation_custom(grid::rasterGrob(img
+                                     , width = unit(1, "npc")
+                                     , height = unit(1, "npc"))) +
+  geom_violin_pattern( fill = '#f28e13', color = 'white',
+                       pattern = 'circle', pattern_density = 0.3) + 
+  coord_flip() +
+  labs(title = 'Beer Drinks and Number of Ingredients') +
+  theme(titl = element_text(angle = -45, hjust = 0)) +
+  theme(axis.text.x = element_text(colour = "#FF10F0")) +  
+  theme(panel.background = element_rect(fill = 'img'))+
+  theme_void()
+
+```
+
+This chart is **bad** because there is NO indication on what is being measured on the x and y axis. While there is a title, it is not centered and not enough information is given. Now you can enjoy a nice tall glass of beer!
+
+Now, let's look at the good chart
+
+```{r Good Plot}
+
+cocktails %>%
+  ggplot( aes(x = category,
+              y = ingredient_number,
+              fill = category)) +
+  geom_violin() +
+  theme_bw() +
+  scale_fill_brewer(palette = "PiYG") +
+  ggtitle(label = "Drink Category and Ingredients") +
+  labs( x = "Cocktail Category",
+        y = "Number of Ingredients") +
+  theme(legend.position="none",
+        plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_text(angle = 35, size = 8),
+        axis.text.x = element_text(angle = -20, vjust = -0.3, size = 7),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  coord_flip()
+
+```
+
+This chart is **good** because there are clean labels on the x and y axis. This chart has broken down the the categories seen in this data set and is comparing the number of ingredients seen in each category. There is a clear label that is centered and there are no distracting colors to take away from the graph.
