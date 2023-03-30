@@ -51,11 +51,12 @@ Now, Let's create our Bad graph! We want to add in an image in our background, s
 
 ```{r Bar Image}
 img <- image_read("https://images.unsplash.com/photo-1597290282695-edc43d0e7129?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=875&q=80")
+# This is how you add in image
 
-img %>% 
+img %>% # Scale the image to make it fill the screen 
   image_scale("200")
 
-img %>% 
+img %>% # Blur the image for a dramatic effect and put a white haze on it
   image_blur(5, 5) %>%
   image_colorize(opacity = 20, color = "white")
 
@@ -65,24 +66,24 @@ img %>%
 
 ```{r, Bad Plot, echo = TRUE}
 
-cocktails_clean <- cocktails %>%
+cocktails_clean <- cocktails %>% #Subset data to the variables of interest
   select(drink, ingredient_number,category,drink_thumb) %>%
   filter(category == 'Beer',
          ingredient_number < 4)
 
-view(cocktails_clean)
+view(cocktails_clean) # check subsetted data
 
 
-cocktails_clean %>%
+cocktails_clean %>% 
   ggplot( aes(x = ingredient_number,
               y = drink)) +
-  annotation_custom(grid::rasterGrob(img
+  annotation_custom(grid::rasterGrob(img # This grid replaced the usual panel. 
                                      , width = unit(1, "npc")
                                      , height = unit(1, "npc"))) +
   geom_violin_pattern( fill = '#f28e13', color = 'white',
                        pattern = 'circle', pattern_density = 0.3) + 
   coord_flip() +
-  labs(title = 'Beer Drinks and Number of Ingredients') +
+  labs(title = 'SHOTS! SHOTS! SHOTS!') +
   theme(titl = element_text(angle = -45, hjust = 0)) +
   theme(axis.text.x = element_text(colour = "#FF10F0")) +  
   theme(panel.background = element_rect(fill = 'img'))+
@@ -90,7 +91,8 @@ cocktails_clean %>%
 
 ```
 
-This chart is **bad** because there is NO indication on what is being measured on the x and y axis. While there is a title, it is not centered and not enough information is given. Now you can enjoy a nice tall glass of beer!
+This chart is **bad** because there is NO indication on what is being measured on the x and y axis. Additionally, there are some major aesthetic issues. While there is a [title](https://www.youtube.com/watch?v=yNju8Rgwtg8), it is not centered and not enough information is given. Now you can enjoy a nice tall glass of beer!
+
 
 Now, let's look at the good chart
 
