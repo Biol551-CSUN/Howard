@@ -37,7 +37,7 @@ height = is in feet
 volume = volume of timber in cubic feet
 
 ```{r}
-view(trees)
+view(trees) # Observe the data
 ```
 
 ```{r}
