@@ -33,7 +33,7 @@ df %>%
 
 
 # Step 1: Name the function
-FtoC <- function(temp_F) {  #This is a mediocire name, FtoC is better
+FtoC <- function(temp_F) {  #This is a mediocire name, FtoC is better (orginally was fahrenheit_to_celsius)
 temp_C <- (temp_F - 32) * 5 / 9
 return(temp_C)
 } 
