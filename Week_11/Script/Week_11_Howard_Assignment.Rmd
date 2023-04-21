@@ -1,0 +1,88 @@
+---
+title: "Week_11_b_Assignment"
+author: "Kristen Howard"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.path = "../Output")
+```
+Today we will be using the skills we learned from the Strings and Vector lectures. Goals:
+ - Clean up some issues with the character data
+ - Use what you learned today to reorder your factors (into an order that makes sense)
+ - Make column headers better. . . use janitor
+ - Make a plot where one of the axes is a factor
+ 
+### Load Library
+
+```{r}
+library(tidyverse)
+library(here)
+library(janitor) # Used to tidy up data
+library(tidytext) # Used to tidy up data
+library()
+```
+
+
+### Load data
+```{r}
+intertidal_data <- read_csv(here("Week_11","Data","intertidaldata.csv"))
+view(intertidal_data) 
+```
+
+
+
+### Here are some issues that we are seeing:
+There is no consistency on some of these. For example, there is some "Low  .(two spaces) and "Mid 1".
+```{r}
+intertidal_data$Quadrat
+
+
+```
+
+### Let's tackle these down below using {stringr}
+
+```{r}
+intertidal_data$Quadrat <- str_replace(intertidal_data$Quadrat, "Low  \\.","Low") # This solved the "Low  ." issue
+
+intertidal_data$Quadrat <- str_replace(intertidal_data$Quadrat, "Mid  1", "Mid") # This solved the mid 1 issue
+
+view(intertidal_data)
+```
+
+
+```{r}
+intertidal_counts<-intertidal_data %>% # Select data
+                    select(Quadrat) %>% # There are duplicate tide levels now!
+                    mutate(Quadrat = factor(Quadrat, levels=c("Low", "Mid", "High")))  %>% # Make the quadrat location a factor
+                    count(Quadrat) # This will create an n column of counts
+
+intertidal_counts # The quadrats are not factors (<fctr>)
+                  # Let's look at the different locations of quadrat in low, mid, or high tide 
+```
+### Create palatte
+```{r}
+
+my_palette <- c("#ccece6", "#66c2a4", "#238b45") # Let's create a palette 
+```
+
+
+```{r, Tide Graph}
+intertidal_counts %>% # Select data
+            ggplot(aes(x= Quadrat,
+                       y = n,
+                       fill = Quadrat)) +
+            geom_col() + # Graph type. . . geom_bar does not show the proper counts on the 7 axis
+            theme_bw() + # Set theme
+            scale_fill_manual(values = my_palette) + # Use the palatte you created
+            labs (x = " Quadrat Location at Tide Level", # Label accordingly
+                  y = "Number of Counts",
+                  title = "The Number of Observations at Each Tide Level")
+```
+
+
