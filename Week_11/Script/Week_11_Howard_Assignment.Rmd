@@ -40,8 +40,7 @@ view(intertidal_data)
 ### Here are some issues that we are seeing:
 There is no consistency on some of these. For example, there is some "Low  .(two spaces) and "Mid 1".
 ```{r}
-intertidal_data$Quadrat
-
+intertidal_data$Quadrat # Investigate this column to see potential consistency errors
 
 ```
 
